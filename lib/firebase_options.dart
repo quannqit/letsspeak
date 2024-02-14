@@ -47,31 +47,31 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDvPn90KRrsn7hOmLm8TwrqrN3zFTJq6eY',
-    appId: '1:632062248862:web:295d5d012854f7d639b88f',
-    messagingSenderId: '632062248862',
-    projectId: 'itutor-9f1fe',
-    authDomain: 'itutor-9f1fe.firebaseapp.com',
-    storageBucket: 'itutor-9f1fe.appspot.com',
-    measurementId: 'G-XGSER4JQJS',
+    apiKey: 'AIzaSyDyEn0vKEiGrxoIfn4dPGtWWKJCJIWASck',
+    appId: '1:592182452972:web:3d153e7077b7d63efffbc9',
+    messagingSenderId: '592182452972',
+    projectId: 'letsspeak-9a2ea',
+    authDomain: 'letsspeak-9a2ea.firebaseapp.com',
+    storageBucket: 'letsspeak-9a2ea.appspot.com',
+    measurementId: 'G-EF4MLQCFB4',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCXG_EmSQCQXGjogG61GJalgwSs65BaEcw',
-    appId: '1:632062248862:android:3d5cd3c28d8046e839b88f',
-    messagingSenderId: '632062248862',
-    projectId: 'itutor-9f1fe',
-    storageBucket: 'itutor-9f1fe.appspot.com',
+    apiKey: 'AIzaSyBnDDs7gXKeYadoBPkpGVD5-ctLWV5sFyg',
+    appId: '1:592182452972:android:92ff147eaaf94416fffbc9',
+    messagingSenderId: '592182452972',
+    projectId: 'letsspeak-9a2ea',
+    storageBucket: 'letsspeak-9a2ea.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAYjlilFnaGcrI8d63UfrtUI8ZyLrR1NV4',
-    appId: '1:632062248862:ios:b5d6d5b6b24d7bbb39b88f',
-    messagingSenderId: '632062248862',
-    projectId: 'itutor-9f1fe',
-    storageBucket: 'itutor-9f1fe.appspot.com',
-    androidClientId: '632062248862-7ptr53nh0aer9pjg82khqk60hoplut4s.apps.googleusercontent.com',
-    iosClientId: '632062248862-0fiqqacjivpa28pmohigacm2t8c6ed92.apps.googleusercontent.com',
-    iosBundleId: 'dev.quannq.speakout',
+    apiKey: 'AIzaSyDGAjKlHgh0yxpKBRJtsI0YQa0gQiO6UIk',
+    appId: '1:592182452972:ios:0b01969cd5f6f6ddfffbc9',
+    messagingSenderId: '592182452972',
+    projectId: 'letsspeak-9a2ea',
+    storageBucket: 'letsspeak-9a2ea.appspot.com',
+    androidClientId: '592182452972-qbqu5nh9279kjifmi200nuiivuulpmu2.apps.googleusercontent.com',
+    iosClientId: '592182452972-9jkpggefhclhapqdoqdk3bhlfnc72bm9.apps.googleusercontent.com',
+    iosBundleId: 'dev.quannq.letsspeak',
   );
 }

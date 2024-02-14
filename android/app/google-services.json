@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "592182452972",
+    "project_id": "letsspeak-9a2ea",
+    "storage_bucket": "letsspeak-9a2ea.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:592182452972:android:92ff147eaaf94416fffbc9",
+        "android_client_info": {
+          "package_name": "dev.quannq.letsspeak"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "592182452972-qbqu5nh9279kjifmi200nuiivuulpmu2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dev.quannq.letsspeak",
+            "certificate_hash": "45630f9f365ac14dbd0af47ffbe4f45777cce2de"
+          }
+        },
+        {
+          "client_id": "592182452972-aj37ehtsgivr9vqg1clhvv0p3m0ju0f7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnDDs7gXKeYadoBPkpGVD5-ctLWV5sFyg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "592182452972-aj37ehtsgivr9vqg1clhvv0p3m0ju0f7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "592182452972-9jkpggefhclhapqdoqdk3bhlfnc72bm9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "dev.quannq.letsspeak"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
