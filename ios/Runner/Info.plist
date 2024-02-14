@@ -75,7 +75,9 @@
     <string>Listen your speak</string>
     <key>NSSpeechRecognitionUsageDescription</key>
     <string>Understand your speak</string>
-    <key>MinimumOSVersion</key>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>ReceiveSharing requires the Photos Permission to select and upload the photo</string>
+	<key>MinimumOSVersion</key>
     <string>12.0</string>
 </dict>
 </plist>
