@@ -1,0 +1,76 @@
+{
+  "title": "Learn English through video",
+  "app_name": "SpeakOut",
+  "public_video": "Community",
+  "your_videos": "Your videos",
+  "logout": "Logout",
+  "about": "About SpeakOut",
+  "login": "Login",
+  "email": "Email",
+  "txt_name": "Name",
+  "password": "Password",
+  "sign_in": "Sign In",
+  "register": "Register",
+  "reset_password": "Reset password",
+  "validator_email_empty": "Email can\\'t be empty",
+  "validator_email_invalid": "Email is invalid",
+  "reset_password_sent": "Reset password link has been sent. Please check your mail box!",
+  "unknown_error": "Unknown error!",
+  "sign_up": "Sign Up",
+  "go_to_marketplace": "You don't have any video yet, go and find some!",
+  "add_to_my_video_list": "Add",
+  "video_added": "Video \"{x}\" has been added to your video list",
+  "@video_added": {
+    "description": "Video \"abc\" has been added to your video list",
+    "placeholders": {
+      "x": {
+        "type": "String",
+        "example": "acb"
+      }
+    }
+  },
+  "video_translated": "Video \"{x}\" has been translated",
+  "video_publish": "Video \"{x}\" has been published",
+  "cancel": "Cancel",
+  "ok": "OK",
+  "skip": "Skip",
+  "sign_in_with_google": "Sign in with Google",
+  "x_y_sentences": "{x}/{y} Sentences",
+  "@x_y_sentences": {
+    "description": "5/10 Sentences",
+    "placeholders": {
+      "x": {
+        "type": "int",
+        "example": "5"
+      },
+      "y": {
+        "type": "int",
+        "example": "10"
+      }
+    }
+  },
+  "welcome": "Welcome to SpeakOut!",
+  "choose_first_language": "Please choose your first language:",
+  "note": "Note",
+  "submit": "Send",
+  "choose_first_language_desc": "Transcript will be translated into your first language.",
+  "practice_everywhere": "Practice English 24/7 from everywhere",
+  "switch_lang_message": "To help Bobby can understand your speak in English, please change phone language to English.",
+  "tap_to_repeat": "Guideline 1\nTap the repeat icon to listen again.",
+  "tap_to_speak": "Guideline 2\nTap the microphone icon and speak to check your pronunciation.",
+  "add_video": "Request Video",
+  "video_id": "YouTube video link",
+  "view_on_youtube": "View on Youtube",
+  "edit_transcript": "Edit Transcript",
+  "youtube": "https://www.youtube.com/watch?v={videoId}",
+  "@youtube": {
+    "description": "youtube link",
+    "placeholders": {
+      "videoId": {
+        "type": "String"
+      }
+    }
+  },
+  "editing_transcript": "Transcript is being edited.",
+  "done": "Done"
+}
