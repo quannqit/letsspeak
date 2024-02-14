@@ -71,5 +71,9 @@
         </dict>
     </array>
     <!-- End of the Google Sign-in Section -->
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Listen your speak</string>
+    <key>NSSpeechRecognitionUsageDescription</key>
+    <string>Understand your speak</string>
 </dict>
 </plist>
