@@ -9,7 +9,7 @@ cd $CI_PRIMARY_REPOSITORY_PATH # change working directory to the root of your cl
 echo "API_HOST=$API_HOST" > .env
 
 # Install Flutter using git.
-git clone -b master https://github.com/flutter/flutter.git $HOME/flutter
+git clone -b 3.12.0 https://github.com/flutter/flutter.git $HOME/flutter
 export PATH="$PATH:$HOME/flutter/bin"
 
 # Install Flutter artifacts for iOS (--ios), or macOS (--macos) platforms.
