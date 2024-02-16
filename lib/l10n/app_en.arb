@@ -1,10 +1,10 @@
 {
   "title": "Learn English through video",
-  "app_name": "SpeakOut",
+  "app_name": "Let's Speak",
   "public_video": "Community",
-  "your_videos": "Your videos",
+  "your_videos": "My videos",
   "logout": "Logout",
-  "about": "About SpeakOut",
+  "about": "About Let's Speak",
   "login": "Login",
   "email": "Email",
   "txt_name": "Name",
@@ -12,7 +12,7 @@
   "sign_in": "Sign In",
   "register": "Register",
   "reset_password": "Reset password",
-  "validator_email_empty": "Email can\\'t be empty",
+  "validator_email_empty": "Email can't be empty",
   "validator_email_invalid": "Email is invalid",
   "reset_password_sent": "Reset password link has been sent. Please check your mail box!",
   "unknown_error": "Unknown error!",
@@ -49,7 +49,7 @@
       }
     }
   },
-  "welcome": "Welcome to SpeakOut!",
+  "welcome": "Welcome to Let's Speak!",
   "choose_first_language": "Please choose your first language:",
   "note": "Note",
   "submit": "Send",
