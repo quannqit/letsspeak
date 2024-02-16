@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:letsspeak/data/network/api/constant/endpoints.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class DioClient {
   // dio instance
@@ -10,7 +9,6 @@ class DioClient {
   // injecting dio instance
   DioClient(this._dio) {
     _dio
-      ..options.baseUrl = dotenv.get('API_HOST')
       ..options.connectTimeout = const Duration(seconds: Endpoints.connectionTimeout)
       ..options.receiveTimeout = const Duration(seconds: Endpoints.receiveTimeout)
       ..options.responseType = ResponseType.json

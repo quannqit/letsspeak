@@ -1,3 +1,4 @@
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:letsspeak/data/network/api/auth/auth.dart';
 import 'package:letsspeak/data/network/api/translated_transcript/translated_transcript_api.dart';
 import 'package:letsspeak/data/network/api/user_video/user_video_api.dart';
@@ -18,7 +19,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 final getIt = GetIt.instance;
 
 Future<void> setup() async {
-  getIt.registerSingleton(Dio());
+  final remoteConfig = FirebaseRemoteConfig.instance;
+  await remoteConfig.fetchAndActivate();
+  final baseUrl = remoteConfig.getString("API_HOST");
+
+  getIt.registerSingleton(Dio(BaseOptions(baseUrl: baseUrl)));
   getIt.registerSingleton(DioClient(getIt<Dio>()));
 
   getIt.registerSingleton(AuthApi(dioClient: getIt<DioClient>()));
