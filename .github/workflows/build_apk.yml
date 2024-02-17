@@ -83,12 +83,11 @@ jobs:
         with:
           name: app-release.aab
 
-      - run: echo ${{ secrets.GOOGLE_SERVICE }} | base64 --decode > google-services.json
       - name: Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1.7.0
         with:
           appId: ${{secrets.FIREBASE_APP_ID}}
-          token: ${{secrets.FIREBASE_TOKEN}}
+          serviceCredentialsFileContent: ${{secrets.FIREBASE_ADMINSDK_SERVICE_ACCOUNT_KEY}}
           groups: testers
           file: app-release.aab
 
@@ -116,11 +115,10 @@ jobs:
         with:
           args: unzip -qq merged_native_libs.zip -d merged_native_libs
 
-      - run: echo ${{ secrets.GOOGLE_SERVICE }} | base64 --decode > google-services.json
       - name: Upload App bundle to Play Store
         uses: r0adkll/upload-google-play@v1.1.3
         with:
-          serviceAccountJson: google-services.json
+          serviceAccountJsonPlainText: ${{ secrets.FIREBASE_ADMINSDK_SERVICE_ACCOUNT_KEY }}
           packageName: dev.quannq.letsspeak
           releaseFiles: app-release.aab
           track: production
