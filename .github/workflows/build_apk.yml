@@ -34,11 +34,7 @@ jobs:
         with:
           flutter-version: '3.12.0'
           channel: 'master'
-          cache: true
-          cache-key: 'flutter-:os:-:channel:-:version:-:arch:-:hash:' # optional, change this to force refresh cache
-          cache-path: '${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:' # optional, change this to specify the cache path
-          pub-cache-key: 'flutter-pub:os:-:channel:-:version:-:arch:-:hash:' # optional, change this to force refresh cache of dart pub get dependencies
-          pub-cache-path: '${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:' # optional, change this to specify the cache path
+          cache: false
       - run: flutter --version
 
       - run: echo ${{ secrets.GOOGLE_SERVICE }} | base64 --decode > android/app/google-services.json
