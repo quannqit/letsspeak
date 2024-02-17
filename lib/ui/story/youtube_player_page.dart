@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'dart:math' as math;
 
+import 'package:letsspeak/data/models/requests/video_request.dart';
 import 'package:letsspeak/data/models/responses/user_data_response.dart';
 import 'package:letsspeak/data/models/user_video.dart';
 import 'package:letsspeak/target.dart';
@@ -499,14 +500,6 @@ class _YoutubePlayerPageState extends State<YoutubePlayerPage> {
 
   @override
   Widget build(BuildContext context) {
-    final highlightedWord = HighlightedWord(
-      textStyle: const TextStyle(
-        color: Colors.green,
-        fontWeight: FontWeight.bold,
-        fontSize: 16,
-        inherit: false,
-      ),
-    );
 
     return YoutubePlayerBuilder(
       onExitFullScreen: () {
@@ -668,247 +661,7 @@ class _YoutubePlayerPageState extends State<YoutubePlayerPage> {
             Expanded(
               child: (
                 userVideoLoaded ?
-                ScrollablePositionedList.builder(
-                  itemCount: userVideo.video.transcript.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final Transcript transcript =
-                    userVideo.video.transcript[index];
-                    final String translatedText =
-                    translatedTranscripts.length > index
-                        ? translatedTranscripts[index]
-                        : '';
-                    final words = {
-                      for (String word in transcript.text
-                          .replaceAll(RegExp(r"[^'\s\w]"), '')
-                          .replaceAll(RegExp(r"^'"), '')
-                          .replaceAll(RegExp(r"'$"), '')
-                          .replaceAll(RegExp(r"\s'"), ' ')
-                          .replaceAll(RegExp(r"'\s"), ' ')
-                          .split(' '))
-                        word: highlightedWord
-                    };
-                    final String recognizedWords =
-                        userVideo.recognizedWords[index.toString()] ?? '';
-                    final TextHighlight textHighlight = TextHighlight(
-                      text: recognizedWords,
-                      words: words,
-                      textStyle: const TextStyle(
-                        color: Colors.red,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                      textAlign: TextAlign.justify,
-                      binding: HighlightBinding.all,
-                    );
-
-                    bool isThumbsUp = textHighlight.isThumbUp();
-                    bool isFirstItem = index == 0;
-
-                    TextEditingController textController = transcript.controller!;
-                    return Slidable(
-                      endActionPane: ActionPane(
-                        motion: const ScrollMotion(),
-                        extentRatio: 0.2,
-                        children: [
-                          SlidableAction(
-                            onPressed: (BuildContext context) {
-                              _drop(index);
-                            },
-                            icon: Icons.clear,
-                          ),
-                        ],
-                      ),
-                      child: Card(
-                        child: GestureDetector(
-                          onDoubleTap: () {
-                            setPinIndex(-1);
-                            final dur = (transcript.start * 1000).toInt();
-                            _controller.seekTo(Duration(milliseconds: dur));
-                          },
-                          child: Column(
-                            children: [
-                              Visibility(
-                                visible: showToolbox,
-                                child: Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceEvenly,
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.center,
-                                  children: [
-                                    Visibility(
-                                      visible: !isFirstItem,
-                                      child: IconButton(
-                                        icon: const Icon(Icons.move_up),
-                                        onPressed: () {
-                                          _join(index);
-                                        },
-                                      ),
-                                    ),
-                                    Transform.rotate(
-                                      angle: -math.pi / 2,
-                                      child: IconButton(
-                                        icon: const Icon(Icons.vertical_align_top),
-                                        onPressed: () {
-                                          _setStart(transcript);
-                                        },
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Text(
-                                        '${transcript.start.toStringAsFixed(2)} - ${transcript.end().toStringAsFixed(2)}',
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                    Transform.rotate(
-                                      angle: math.pi / 2,
-                                      child: IconButton(
-                                        icon: const Icon(Icons.vertical_align_top),
-                                        onPressed: () {
-                                          _setEnd(transcript);
-                                        },
-                                      ),
-                                    ),
-                                    Transform.rotate(
-                                      angle: math.pi,
-                                      child: IconButton(
-                                        icon: const Icon(Icons.move_up),
-                                        onPressed: () {
-                                          _split(index, textController);
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              ListTile(
-                                contentPadding: const EdgeInsets.only(right: 8, left: 8),
-                                isThreeLine: true,
-                                title: showToolbox ?
-                                TextField(
-                                  controller: textController,
-                                  keyboardType: TextInputType.text,
-                                  maxLines: null,
-                                  style: TextStyle(
-                                      fontWeight: curPlayingIndex == index
-                                          ? FontWeight.bold
-                                          : FontWeight.normal
-                                  ),
-                                  onSubmitted: (value) {
-                                    _change(index, value);
-                                  },
-                                ) :
-                                Text(
-                                  transcript.text,
-                                  style: TextStyle(
-                                    fontWeight:
-                                    curPlayingIndex == index
-                                        ? FontWeight.bold
-                                        : FontWeight.normal,
-                                  ),
-                                ),
-                                subtitle: Text(translatedText),
-                                trailing: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    IconButton(
-                                      onPressed: () {
-                                        setPinIndex(-1);
-                                        final dur =
-                                        (transcript.start * 1000).toInt();
-                                        _controller.seekTo(
-                                            Duration(milliseconds: dur));
-                                      },
-                                      icon: const Icon(
-                                        Icons.play_arrow,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    pinIndex == index
-                                        ? IconButton(
-                                      icon: const Icon(
-                                        Icons.repeat_one_on_outlined,
-                                        color: Colors.black,
-                                      ),
-                                      onPressed: () {
-                                        _controller.pause();
-                                        setPinIndex(-1);
-                                      },
-                                    )
-                                        : IconButton(
-                                      key: index == 0
-                                          ? repeatButtonKey
-                                          : null,
-                                      onPressed: () {
-                                        setPinIndex(index);
-                                      },
-                                      icon: const Icon(
-                                        Icons.repeat_outlined,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              ListTile(
-                                contentPadding:
-                                const EdgeInsets.only(right: 8, left: 8),
-                                title: recognizedWords.isNotEmpty
-                                    ? textHighlight
-                                    : null,
-                                trailing: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Visibility(
-                                      visible: userVideo.recognizedWords
-                                          .containsKey(
-                                          index.toString()) ??
-                                          false,
-                                      child: IconButton(
-                                        onPressed: null,
-                                        icon: ThumbsAnimation(
-                                            isThumbsUp: isThumbsUp),
-                                      ),
-                                    ),
-                                    IconButton(
-                                      icon: Icon(
-                                        curRecognizingIndex == index &&
-                                            _speechToText.isListening
-                                            ? Icons.mic
-                                            : Icons.mic_off,
-                                        color: curRecognizingIndex == index &&
-                                            _speechToText.isListening
-                                            ? Colors.green
-                                            : Colors.black,
-                                        size: 32,
-                                      ),
-                                      onPressed: () {
-                                        setPinIndex(-1);
-
-                                        curRecognizingIndex = index;
-
-                                        // If not yet listening for speech start, otherwise stop
-                                        if (_speechToText.isNotListening) {
-                                          _startListening();
-                                        } else {
-                                          _stopListening();
-                                        }
-                                      },
-                                      key: index == 0
-                                          ? microphoneButtonKey
-                                          : null,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                  itemScrollController: itemScrollController,
-                  itemPositionsListener: itemPositionsListener,
-                ) :
+                buildTranscript(context) :
                 const Center(child: CircularProgressIndicator())
               ),
             ),
@@ -916,6 +669,264 @@ class _YoutubePlayerPageState extends State<YoutubePlayerPage> {
         ),
       ),
     );
+  }
+
+  HighlightedWord get _highlightedWord => HighlightedWord(
+    textStyle: const TextStyle(
+      color: Colors.green,
+      fontWeight: FontWeight.bold,
+      fontSize: 16,
+      inherit: false,
+    ),
+  );
+
+  Widget buildTranscript(BuildContext context) {
+
+    if (userVideo.video.status == Status.PUBLISHED) {
+      return ScrollablePositionedList.builder(
+        itemCount: userVideo.video.transcript.length,
+        itemBuilder: (BuildContext context, int index) {
+          final Transcript transcript =
+          userVideo.video.transcript[index];
+          final String translatedText =
+          translatedTranscripts.length > index
+              ? translatedTranscripts[index]
+              : '';
+          final words = {
+            for (String word in transcript.text
+                .replaceAll(RegExp(r"[^'\s\w]"), '')
+                .replaceAll(RegExp(r"^'"), '')
+                .replaceAll(RegExp(r"'$"), '')
+                .replaceAll(RegExp(r"\s'"), ' ')
+                .replaceAll(RegExp(r"'\s"), ' ')
+                .split(' '))
+              word: _highlightedWord
+          };
+          final String recognizedWords =
+              userVideo.recognizedWords[index.toString()] ?? '';
+          final TextHighlight textHighlight = TextHighlight(
+            text: recognizedWords,
+            words: words,
+            textStyle: const TextStyle(
+              color: Colors.red,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+            textAlign: TextAlign.justify,
+            binding: HighlightBinding.all,
+          );
+
+          bool isThumbsUp = textHighlight.isThumbUp();
+          bool isFirstItem = index == 0;
+
+          TextEditingController textController = transcript.controller!;
+          return Slidable(
+            endActionPane: ActionPane(
+              motion: const ScrollMotion(),
+              extentRatio: 0.2,
+              children: [
+                SlidableAction(
+                  onPressed: (BuildContext context) {
+                    _drop(index);
+                  },
+                  icon: Icons.clear,
+                ),
+              ],
+            ),
+            child: Card(
+              child: GestureDetector(
+                onDoubleTap: () {
+                  setPinIndex(-1);
+                  final dur = (transcript.start * 1000).toInt();
+                  _controller.seekTo(Duration(milliseconds: dur));
+                },
+                child: Column(
+                  children: [
+                    Visibility(
+                      visible: showToolbox,
+                      child: Row(
+                        mainAxisAlignment:
+                        MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment:
+                        CrossAxisAlignment.center,
+                        children: [
+                          Visibility(
+                            visible: !isFirstItem,
+                            child: IconButton(
+                              icon: const Icon(Icons.move_up),
+                              onPressed: () {
+                                _join(index);
+                              },
+                            ),
+                          ),
+                          Transform.rotate(
+                            angle: -math.pi / 2,
+                            child: IconButton(
+                              icon: const Icon(Icons.vertical_align_top),
+                              onPressed: () {
+                                _setStart(transcript);
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              '${transcript.start.toStringAsFixed(2)} - ${transcript.end().toStringAsFixed(2)}',
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          Transform.rotate(
+                            angle: math.pi / 2,
+                            child: IconButton(
+                              icon: const Icon(Icons.vertical_align_top),
+                              onPressed: () {
+                                _setEnd(transcript);
+                              },
+                            ),
+                          ),
+                          Transform.rotate(
+                            angle: math.pi,
+                            child: IconButton(
+                              icon: const Icon(Icons.move_up),
+                              onPressed: () {
+                                _split(index, textController);
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    ListTile(
+                      contentPadding: const EdgeInsets.only(right: 8, left: 8),
+                      isThreeLine: true,
+                      title: showToolbox ?
+                      TextField(
+                        controller: textController,
+                        keyboardType: TextInputType.text,
+                        maxLines: null,
+                        style: TextStyle(
+                            fontWeight: curPlayingIndex == index
+                                ? FontWeight.bold
+                                : FontWeight.normal
+                        ),
+                        onSubmitted: (value) {
+                          _change(index, value);
+                        },
+                      ) :
+                      Text(
+                        transcript.text,
+                        style: TextStyle(
+                          fontWeight:
+                          curPlayingIndex == index
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                        ),
+                      ),
+                      subtitle: Text(translatedText),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              setPinIndex(-1);
+                              final dur =
+                              (transcript.start * 1000).toInt();
+                              _controller.seekTo(
+                                  Duration(milliseconds: dur));
+                            },
+                            icon: const Icon(
+                              Icons.play_arrow,
+                              color: Colors.black,
+                            ),
+                          ),
+                          pinIndex == index
+                              ? IconButton(
+                            icon: const Icon(
+                              Icons.repeat_one_on_outlined,
+                              color: Colors.black,
+                            ),
+                            onPressed: () {
+                              _controller.pause();
+                              setPinIndex(-1);
+                            },
+                          )
+                              : IconButton(
+                            key: index == 0
+                                ? repeatButtonKey
+                                : null,
+                            onPressed: () {
+                              setPinIndex(index);
+                            },
+                            icon: const Icon(
+                              Icons.repeat_outlined,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    ListTile(
+                      contentPadding:
+                      const EdgeInsets.only(right: 8, left: 8),
+                      title: recognizedWords.isNotEmpty
+                          ? textHighlight
+                          : null,
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Visibility(
+                            visible: userVideo.recognizedWords
+                                .containsKey(
+                                index.toString()) ??
+                                false,
+                            child: IconButton(
+                              onPressed: null,
+                              icon: ThumbsAnimation(
+                                  isThumbsUp: isThumbsUp),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              curRecognizingIndex == index &&
+                                  _speechToText.isListening
+                                  ? Icons.mic
+                                  : Icons.mic_off,
+                              color: curRecognizingIndex == index &&
+                                  _speechToText.isListening
+                                  ? Colors.green
+                                  : Colors.black,
+                              size: 32,
+                            ),
+                            onPressed: () {
+                              setPinIndex(-1);
+
+                              curRecognizingIndex = index;
+
+                              // If not yet listening for speech start, otherwise stop
+                              if (_speechToText.isNotListening) {
+                                _startListening();
+                              } else {
+                                _stopListening();
+                              }
+                            },
+                            key: index == 0
+                                ? microphoneButtonKey
+                                : null,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+        itemScrollController: itemScrollController,
+        itemPositionsListener: itemPositionsListener,
+      );
+    }
+
+    return Center(child: Text(AppLocalizations.of(context)!.editing_transcript));
   }
 
   Widget get _space => const SizedBox(height: 10);
