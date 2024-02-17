@@ -97,6 +97,7 @@ class _LoginPageState extends State<LoginPage> {
                             validator: (value) {
                               if (!_skipPassword) {
                                 return Validator.validatePassword(
+                                  context: context,
                                   password: value,
                                 );
                               }

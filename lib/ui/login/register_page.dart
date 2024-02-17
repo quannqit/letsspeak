@@ -56,7 +56,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       TextFormField(
                         controller: _nameTextController,
                         focusNode: _focusName,
-                        validator: (value) => Validator.validateName(name: value),
+                        validator: (value) => Validator.validateName(context: context, name: value),
                         decoration: InputDecoration(
                           hintText: AppLocalizations.of(context)!.txt_name,
                           errorBorder: UnderlineInputBorder(
@@ -84,7 +84,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         controller: _passwordTextController,
                         focusNode: _focusPassword,
                         obscureText: true,
-                        validator: (value) => Validator.validatePassword(password: value),
+                        validator: (value) => Validator.validatePassword(context: context, password: value),
                         decoration: InputDecoration(
                           hintText: AppLocalizations.of(context)!.password,
                           errorBorder: UnderlineInputBorder(

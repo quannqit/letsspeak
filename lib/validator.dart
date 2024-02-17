@@ -2,13 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Validator {
-  static String? validateName({required String? name}) {
+  static String? validateName({required BuildContext context, required String? name}) {
     if (name == null) {
       return null;
     }
 
     if (name.isEmpty) {
-      return 'Name can\'t be empty';
+      return AppLocalizations.of(context)!.validator_name_empty;
     }
 
     return null;
@@ -31,15 +31,15 @@ class Validator {
     return null;
   }
 
-  static String? validatePassword({required String? password}) {
+  static String? validatePassword({required BuildContext context, required String? password}) {
     if (password == null) {
       return null;
     }
 
     if (password.isEmpty) {
-      return 'Password can\'t be empty';
+      return AppLocalizations.of(context)!.validator_password_empty;
     } else if (password.length < 6) {
-      return 'Enter a password with length at least 6';
+      return AppLocalizations.of(context)!.validator_password_length;
     }
 
     return null;

@@ -68,6 +68,7 @@ class _YoutubePlayerPageState extends State<YoutubePlayerPage> {
   int curPlayingIndex = 0;
 
   final SpeechToText _speechToText = SpeechToText();
+  bool _isListening = false;
 
   int curRecognizingIndex = -1;
 
@@ -373,8 +374,15 @@ class _YoutubePlayerPageState extends State<YoutubePlayerPage> {
       localeId: 'en-US',
       pauseFor: isIOS() ? const Duration(seconds: 2) : null,
       onResult: _onSpeechResult,
-      cancelOnError: true,
+      listenOptions: SpeechListenOptions(
+        cancelOnError: true,
+        listenMode: ListenMode.dictation
+      ),
     );
+
+    setState(() {
+      _isListening = true;
+    });
   }
 
   /// Manually stop the active speech recognition session
@@ -383,6 +391,9 @@ class _YoutubePlayerPageState extends State<YoutubePlayerPage> {
   /// listen method.
   void _stopListening() {
     _speechToText.stop();
+    setState(() {
+      _isListening = false;
+    });
   }
 
   /// This is the callback that the SpeechToText plugin calls when
@@ -396,6 +407,9 @@ class _YoutubePlayerPageState extends State<YoutubePlayerPage> {
 
     if (result.finalResult) {
       _syncRecognizedWords();
+      setState(() {
+        _isListening = false;
+      });
     }
   }
 
@@ -853,11 +867,11 @@ class _YoutubePlayerPageState extends State<YoutubePlayerPage> {
                           IconButton(
                             icon: Icon(
                               curRecognizingIndex == index &&
-                                  _speechToText.isListening
+                                  _isListening
                                   ? Icons.mic
                                   : Icons.mic_off,
                               color: curRecognizingIndex == index &&
-                                  _speechToText.isListening
+                                  _isListening
                                   ? Colors.green
                                   : Colors.black,
                               size: 32,
@@ -867,11 +881,11 @@ class _YoutubePlayerPageState extends State<YoutubePlayerPage> {
 
                               curRecognizingIndex = index;
 
-                              // If not yet listening for speech start, otherwise stop
-                              if (_speechToText.isNotListening) {
-                                _startListening();
-                              } else {
+                              // If it's listening for speech stop, otherwise start
+                              if (_isListening) {
                                 _stopListening();
+                              } else {
+                                _startListening();
                               }
                             },
                             key: index == 0
