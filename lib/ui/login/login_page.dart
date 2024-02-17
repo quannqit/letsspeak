@@ -217,11 +217,13 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   _handleGoogleSignInSuccess(User user) {
-    userRepository.addNewUserRequested().then((value) {
+    return userRepository.addNewUserRequested().then((value) {
       if (kDebugMode) {
         print('User is created!');
       }
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomePage()));
+      if (mounted) {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomePage()));
+      }
     });
   }
 

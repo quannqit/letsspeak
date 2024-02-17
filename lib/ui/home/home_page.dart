@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:letsspeak/data/models/requests/video_request.dart';
 import 'package:letsspeak/data/models/responses/user_data_response.dart';
 import 'package:letsspeak/data/models/user_video.dart';
@@ -181,6 +182,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               title: Text(AppLocalizations.of(context)!.logout),
               onTap: () {
                 FirebaseAuth.instance.signOut().then((value) {
+                  GoogleSignIn().signOut();
                   Navigator.of(context).pop();
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
@@ -384,8 +386,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     });
 
     // For sharing or opening urls/text coming from outside the app while the app is closed
-    ReceiveSharingIntent.getInitialMedia().then((value) {
-      navigateToShareText(context, value as String?);
+    ReceiveSharingIntent.getInitialMedia().then((List<SharedMediaFile> values) {
+      if (values.isNotEmpty && values[0].type.value == SharedMediaType.url.value) {
+        navigateToShareText(context, values[0].path);
+      }
     });
   }
 

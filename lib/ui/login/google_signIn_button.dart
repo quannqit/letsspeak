@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -15,30 +17,48 @@ class GoogleSignInButton extends StatefulWidget {
 
 class _GoogleSignInButtonState extends State<GoogleSignInButton> {
   bool _isSigningIn = false;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-  Future<UserCredential> signInWithGoogle() async {
+  @override
+  void initState() {
+    super.initState();
 
-    GoogleSignInAccount? googleUser;
-    String? clientId;
+    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) async {
+// #docregion CanAccessScopes
+      // In mobile, being authenticated means being authorized...
+      bool isAuthorized = account != null;
+      // However, on web...
+      // if (kIsWeb && account != null) {
+      //   isAuthorized = await _googleSignIn.canAccessScopes(scopes);
+      // }
+// #enddocregion CanAccessScopes
 
-    if (kIsWeb) {
-      clientId = "632062248862-5ttb75cetvutdqbaa2n5ria1pr66ag38.apps.googleusercontent.com";
-    }
+      // Now that we know that the user can access the required scopes, the app
+      // can call the REST API.
+      if (isAuthorized) {
+        // unawaited(_handleGetContact(account!));
+        // Obtain the auth details from the request
+        final GoogleSignInAuthentication? googleAuth =
+          await _googleSignIn.currentUser?.authentication;
 
-    googleUser = await GoogleSignIn(clientId: clientId).signIn();
+        // Create a new credential
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth?.accessToken,
+          idToken: googleAuth?.idToken,
+        );
 
-    // Obtain the auth details from the request
-    final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
+        UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
 
-    // Create a new credential
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
+        widget.onSuccess(userCredential.user!);
+      }
+    });
 
-    // Once signed in, return the UserCredential
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+    // In the web, _googleSignIn.signInSilently() triggers the One Tap UX.
+    //
+    // It is recommended by Google Identity Services to render both the One Tap UX
+    // and the Google Sign In button together to "reduce friction and improve
+    // sign-in rates" ([docs](https://developers.google.com/identity/gsi/web/guides/display-button#html)).
+    _googleSignIn.signInSilently();
   }
 
   @override
@@ -62,9 +82,7 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
                 });
 
                 try {
-                  final userCredential = await signInWithGoogle();
-                  final user = userCredential.user!;
-                  await widget.onSuccess(user);
+                  await _googleSignIn.signIn();
                 }
                 catch (e) {
                   if (kDebugMode) {
