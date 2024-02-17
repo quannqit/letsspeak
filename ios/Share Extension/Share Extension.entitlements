@@ -4,7 +4,8 @@
 <dict>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.dev.quannq.letsspeak</string>
+		<string>group.dev.quannq.letsspeak.ShareExtension</string>
 	</array>
 </dict>
 </plist>
+

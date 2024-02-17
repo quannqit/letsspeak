@@ -51,23 +51,32 @@ class _MyApp extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: FutureBuilder<String?>(
-          future: getToken(), // a previously-obtained Future<String> or null
-          builder: (BuildContext context, AsyncSnapshot<String?> token) {
-            return MaterialApp(
-              localizationsDelegates: AppLocalizations.localizationsDelegates,
-              supportedLocales: AppLocalizations.supportedLocales,
-              home: needOnboard
-                  ? const OnboardingPage()
-                  : ((token.data == null)
-                      ? const LoginPage()
-                      : const HomePage()),
-            );
-          },
-        ));
+    return FutureBuilder<String?>(
+      future: getToken(), // a previously-obtained Future<String> or null
+      builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
+        return MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: buildContent(snapshot),
+        );
+      },
+    );
+  }
+
+  buildContent(AsyncSnapshot<String?> snapshot) {
+    if (needOnboard) {
+      return const OnboardingPage();
+    }
+
+    if (snapshot.connectionState == ConnectionState.done) {
+      if (snapshot.data == null) {
+        return const LoginPage();
+      } else {
+        return const HomePage();
+      }
+    }
+
+    return const CircularProgressIndicator();
   }
 
   Future<String?> getToken() async {

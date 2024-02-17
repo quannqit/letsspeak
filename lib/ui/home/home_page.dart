@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:google_sign_in/google_sign_in.dart';
@@ -53,6 +54,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   bool loading = false;
 
   String? dropdownValue;
+  late StreamSubscription _intentSub;
 
   @override
   void initState() {
@@ -61,14 +63,16 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     scrollController = ScrollController()..addListener(_scrollListener);
     _initRemoteData = _loadRemoteData();
 
-    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      listenShareMediaFiles(context);
-    });
+    // Listen to media sharing coming from outside the app while the app is in the memory.
+    _intentSub = ReceiveSharingIntent.getMediaStream().listen(handleReceiveIntent);
+
+    // Get the media sharing coming from outside the app while the app is closed.
+    ReceiveSharingIntent.getInitialMedia().then(handleReceiveIntent);
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
+    _intentSub.cancel();
     scrollController.removeListener(_scrollListener);
     super.dispose();
   }
@@ -375,22 +379,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     );
   }
 
-  //All listeners to listen Sharing media files & text
-  void listenShareMediaFiles(BuildContext context) {
-
-    // For sharing or opening urls/text coming from outside the app while the app is in the memory
-    ReceiveSharingIntent.getMediaStream().listen((event) {
-      navigateToShareText(context, event as String?);
-    }, onError: (err) {
-      debugPrint("$err");
-    });
-
-    // For sharing or opening urls/text coming from outside the app while the app is closed
-    ReceiveSharingIntent.getInitialMedia().then((List<SharedMediaFile> values) {
-      if (values.isNotEmpty && values[0].type.value == SharedMediaType.url.value) {
-        navigateToShareText(context, values[0].path);
-      }
-    });
+  void handleReceiveIntent(List<SharedMediaFile> values) {
+    if (mounted && values.isNotEmpty) {
+      navigateToShareText(context, values[0].path);
+    }
   }
 
   void navigateToShareText(BuildContext context, String? videoId) {

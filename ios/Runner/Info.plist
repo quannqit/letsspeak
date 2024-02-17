@@ -34,6 +34,14 @@
 				<string>ShareMedia-$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 			</array>
 		</dict>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>com.googleusercontent.apps.592182452972-9jkpggefhclhapqdoqdk3bhlfnc72bm9</string>
+            </array>
+        </dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
@@ -58,19 +66,6 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-    <!-- Google Sign-in Section -->
-    <key>CFBundleURLTypes</key>
-    <array>
-        <dict>
-            <key>CFBundleTypeRole</key>
-            <string>Editor</string>
-            <key>CFBundleURLSchemes</key>
-            <array>
-                <string>com.googleusercontent.apps.592182452972-9jkpggefhclhapqdoqdk3bhlfnc72bm9</string>
-            </array>
-        </dict>
-    </array>
-    <!-- End of the Google Sign-in Section -->
     <key>NSMicrophoneUsageDescription</key>
     <string>Listen your speak</string>
     <key>NSSpeechRecognitionUsageDescription</key>
