@@ -51,7 +51,6 @@ dependencies:
   google_sign_in: ^6.1.6
   flutter_localizations:
     sdk: flutter
-  system_settings: ^2.1.0
   onboarding: ^3.1.0
   shared_preferences: ^2.2.0
   tutorial_coach_mark: ^1.2.9
