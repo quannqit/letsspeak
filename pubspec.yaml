@@ -119,7 +119,6 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
   assets:
-    - .env
     - assets/thumbs.riv
     - assets/images/google_logo.png
     - assets/images/speck_out.png
