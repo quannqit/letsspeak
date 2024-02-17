@@ -10,7 +10,7 @@
   "txt_name": "Tên",
   "password": "Mật khẩu",
   "sign_in": "Đăng nhập",
-  "go_to_marketplace": "Bạn chưa có video nào trong danh mục, tìm video bạn muốn",
+  "go_to_marketplace": "Bạn chưa có video nào trong danh mục, nhấn để tìm video",
   "register": "Đăng ký",
   "reset_password": "Đặt lại mật khẩu",
   "validator_email_empty": "Vui lòng nhập email",

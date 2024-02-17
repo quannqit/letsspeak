@@ -17,7 +17,7 @@
   "reset_password_sent": "Reset password link has been sent. Please check your mail box!",
   "unknown_error": "Unknown error!",
   "sign_up": "Sign Up",
-  "go_to_marketplace": "You don't have any video yet, go and find some!",
+  "go_to_marketplace": "You don't have any video yet, Press here to find some!",
   "add_to_my_video_list": "Add",
   "video_added": "Video \"{x}\" has been added to your video list",
   "@video_added": {
