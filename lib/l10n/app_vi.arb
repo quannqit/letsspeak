@@ -20,6 +20,7 @@
   "validator_name_empty": "Vui lòng nhập tên",
   "reset_password_sent": "Liên kết đặt lại mật khẩu đã được gửi tới email của bạn. Vui lòng kiểm tra!",
   "unknown_error": "Lỗi không xác định!",
+  "error_login_failed": "Email hoặc mật không không đúng, vui lòng kiểm tra lại.",
   "sign_up": "Đăng ký",
   "add_to_my_video_list": "Thêm",
   "video_added": "Video \"{x}\" đã được thêm vào danh sách video của bạn",

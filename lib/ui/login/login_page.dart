@@ -207,7 +207,7 @@ class _LoginPageState extends State<LoginPage> {
       }).then((result) {
         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomePage()));
       }, onError: (err) {
-        showMyDialog(context, err.message ?? AppLocalizations.of(context)!.unknown_error);
+        showMyDialog(context, AppLocalizations.of(context)!.error_login_failed);
       });
     }
   }
