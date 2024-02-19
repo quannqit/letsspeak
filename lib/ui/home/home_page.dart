@@ -14,7 +14,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:iso8601_duration/iso8601_duration.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -37,24 +36,22 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
-  final homeController = getIt<HomeController>();
-  final videoRepository = getIt.get<VideoRepository>();
+  final homeController              = getIt<HomeController>();
+  final videoRepository             = getIt.get<VideoRepository>();
+  final GoogleSignIn _googleSignIn  = getIt<GoogleSignIn>();
+  final _refreshIndicatorKey        = GlobalKey<RefreshIndicatorState>();
 
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      GlobalKey<RefreshIndicatorState>();
   late ScrollController scrollController;
-
   late UserDataResponse userData;
-  List<UserVideo> listUserVideo = [];
-  Future<void>? _initRemoteData;
+  late StreamSubscription _intentSub;
 
+  List<UserVideo> listUserVideo = [];
   int curPage = 1;
   int limit = 10;
   int pageCount = 0;
-  bool loading = false;
 
-  String? dropdownValue;
-  late StreamSubscription _intentSub;
+  Future<void>? _initRemoteData;
+  bool loading = false;
 
   @override
   void initState() {
@@ -186,7 +183,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               title: Text(AppLocalizations.of(context)!.logout),
               onTap: () {
                 FirebaseAuth.instance.signOut().then((value) {
-                  GoogleSignIn().signOut();
+                  _googleSignIn.signOut();
                   Navigator.of(context).pop();
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(

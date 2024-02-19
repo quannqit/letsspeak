@@ -48,26 +48,23 @@ class YoutubePlayerPage extends StatefulWidget {
 }
 
 class _YoutubePlayerPageState extends State<YoutubePlayerPage> {
-  final homeController = getIt<HomeController>();
-  final prefs = getIt<SharedPreferences>();
 
-  late YoutubePlayerController _controller;
-  final ItemScrollController itemScrollController = ItemScrollController();
-  final ItemPositionsListener itemPositionsListener =
-      ItemPositionsListener.create();
+  final homeController        = getIt<HomeController>();
+  final prefs                 = getIt<SharedPreferences>();
+  final _speechToText         = getIt<SpeechToText>();
+
+  final itemScrollController  = ItemScrollController();
+  final itemPositionsListener = ItemPositionsListener.create();
 
   bool _isPlaying = false;
   bool _isPlayerReady = false;
   bool userVideoLoaded = false;
-  late UserVideo userVideo;
 
   List<String> translatedTranscripts = [];
 
-  late int pinIndex = -1;
   int curPlayerPosition = 0;
   int curPlayingIndex = 0;
 
-  final SpeechToText _speechToText = SpeechToText();
   bool _isListening = false;
 
   int curRecognizingIndex = -1;
@@ -76,23 +73,24 @@ class _YoutubePlayerPageState extends State<YoutubePlayerPage> {
   bool videoHasChanges = false;
   bool showToolbox = false;
 
-  GlobalKey repeatButtonKey = GlobalKey();
+  GlobalKey repeatButtonKey     = GlobalKey();
   GlobalKey microphoneButtonKey = GlobalKey();
+
   late TutorialCoachMark tutorial;
+  late YoutubePlayerController _controller;
+  late UserVideo userVideo;
+  late int pinIndex = -1;
 
   @override
   void initState() {
     super.initState();
-    _speechToText.initialize(onStatus: (String status) {
-      setState(() {});
-    }).then((value) {
-      _speechToText.locales().then((List<LocaleName> locales) {
-        if (kDebugMode) {
-          print(
-              "Available locales: ${locales.map((e) => e.localeId + e.name)}");
+    _speechToText.initialize(
+        onError: (err) {
+          setState(() {
+            _isListening = false;
+          });
         }
-      });
-    });
+    );
 
     final shouldShowTutorial = prefs.getBool('showTutorial') ?? true;
 
@@ -369,8 +367,8 @@ class _YoutubePlayerPageState extends State<YoutubePlayerPage> {
   }
 
   /// Each time to start a speech recognition session
-  void _startListening() {
-    _speechToText.listen(
+  Future<void> _startListening() async {
+    await _speechToText.listen(
       localeId: 'en-US',
       pauseFor: isIOS() ? const Duration(seconds: 2) : null,
       onResult: _onSpeechResult,
@@ -389,8 +387,8 @@ class _YoutubePlayerPageState extends State<YoutubePlayerPage> {
   /// Note that there are also timeouts that each platform enforces
   /// and the SpeechToText plugin supports setting timeouts on the
   /// listen method.
-  void _stopListening() {
-    _speechToText.stop();
+  Future<void> _stopListening() async {
+    await _speechToText.stop();
     setState(() {
       _isListening = false;
     });

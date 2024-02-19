@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../di/service_locator.dart';
+
 class GoogleSignInButton extends StatefulWidget {
   final Future<void> Function(User) onSuccess;
 
@@ -17,34 +19,21 @@ class GoogleSignInButton extends StatefulWidget {
 
 class _GoogleSignInButtonState extends State<GoogleSignInButton> {
   bool _isSigningIn = false;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final GoogleSignIn _googleSignIn = getIt<GoogleSignIn>();
 
   @override
   void initState() {
     super.initState();
 
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) async {
-// #docregion CanAccessScopes
-      // In mobile, being authenticated means being authorized...
-      bool isAuthorized = account != null;
-      // However, on web...
-      // if (kIsWeb && account != null) {
-      //   isAuthorized = await _googleSignIn.canAccessScopes(scopes);
-      // }
-// #enddocregion CanAccessScopes
 
-      // Now that we know that the user can access the required scopes, the app
-      // can call the REST API.
-      if (isAuthorized) {
-        // unawaited(_handleGetContact(account!));
-        // Obtain the auth details from the request
-        final GoogleSignInAuthentication? googleAuth =
-          await _googleSignIn.currentUser?.authentication;
+      if (account != null) {
+        final GoogleSignInAuthentication googleAuth = await account.authentication;
 
         // Create a new credential
         final credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth?.accessToken,
-          idToken: googleAuth?.idToken,
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
         );
 
         UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);

@@ -1,4 +1,5 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:letsspeak/data/network/api/auth/auth.dart';
 import 'package:letsspeak/data/network/api/translated_transcript/translated_transcript_api.dart';
 import 'package:letsspeak/data/network/api/user_video/user_video_api.dart';
@@ -15,6 +16,7 @@ import 'package:letsspeak/data/repository/user_repository.dart';
 import 'package:letsspeak/ui/home/controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 
 final getIt = GetIt.instance;
 
@@ -46,5 +48,9 @@ Future<void> setup() async {
 
   final prefs = await SharedPreferences.getInstance();
   getIt.registerSingleton(prefs);
+
+  getIt.registerSingleton(GoogleSignIn());
+
+  getIt.registerSingleton(SpeechToText());
 
 }
