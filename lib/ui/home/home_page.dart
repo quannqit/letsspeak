@@ -168,7 +168,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   MaterialPageRoute(
                     builder: (context) => MarketplacePage(userData, Status.PUBLISHED, AppLocalizations.of(context)!.public_video),
                   ),
-                );
+                ).then((value) {
+                  _loadRemoteData();
+                });
               },
             ),
             ListTile(
