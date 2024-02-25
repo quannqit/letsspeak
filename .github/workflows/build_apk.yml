@@ -71,6 +71,14 @@ jobs:
           name: merged_native_libs.zip
           path: build/app/intermediates/merged_native_libs/release/out/merged_native_libs.zip
 
+      - run: flutter build apk
+
+      - name: Upload apk
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-release.apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+
   distribution:
     name: Firebase App Distribution
     needs: build
