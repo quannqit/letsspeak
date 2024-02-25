@@ -33,6 +33,9 @@ jobs:
       - run: echo ${{ secrets.GOOGLE_SERVICE }} | base64 --decode > android/app/google-services.json
       - run: echo ${{ secrets.RELEASE_KEY_STORE }} | base64 --decode > android/app/letsspeak.jks
       - run: echo ${{ secrets.KEY_PROPERTIES }} | base64 --decode > android/key.properties
+      - run: ls -lrt android/app/google-services.json
+      - run: ls -lrt android/app/letsspeak.jks
+      - run: ls -lrt android/key.properties
 
       - uses: subosito/flutter-action@v2
         with:
