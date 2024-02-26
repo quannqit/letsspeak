@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:letsspeak/data/models/requests/video_request.dart';
 import 'package:letsspeak/data/models/responses/user_data_response.dart';
@@ -42,22 +43,31 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   final _refreshIndicatorKey        = GlobalKey<RefreshIndicatorState>();
 
   late ScrollController scrollController;
-  late UserDataResponse userData;
   late StreamSubscription _intentSub;
 
+  UserDataResponse? userData;
   List<UserVideo> listUserVideo = [];
   int curPage = 1;
   int limit = 10;
   int pageCount = 0;
 
   Future<void>? _initRemoteData;
+  late StreamSubscription<ConnectivityResult> _conSubscription;
   bool loading = false;
+  bool noInternet = false;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     scrollController = ScrollController()..addListener(_scrollListener);
+
+    _conSubscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult connectivityResult) {
+      setState(() {
+        noInternet = connectivityResult == ConnectivityResult.none;
+      });
+    });
+
     _initRemoteData = _loadRemoteData();
 
     // Listen to media sharing coming from outside the app while the app is in the memory.
@@ -69,6 +79,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   @override
   void dispose() {
+    _conSubscription.cancel();
     _intentSub.cancel();
     scrollController.removeListener(_scrollListener);
     super.dispose();
@@ -89,7 +100,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     userData = await homeController.getUserDataApi();
 
-    if (userData.firstLanguage == null) {
+    if (userData != null && userData?.firstLanguage == null) {
       showChooseFirstLanguage();
     }
 
@@ -166,7 +177,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 Navigator.pop(context);
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => MarketplacePage(userData, Status.PUBLISHED, AppLocalizations.of(context)!.public_video),
+                    builder: (context) => MarketplacePage(Status.PUBLISHED, AppLocalizations.of(context)!.public_video),
                   ),
                 ).then((value) {
                   _loadRemoteData();
@@ -213,6 +224,22 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         future: _initRemoteData,
         builder: (context, snapshot) {
 
+          if (noInternet) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Image.asset('assets/images/no_internet.png', width: 100),
+                  Padding(
+                    padding: const EdgeInsets.only( top: 30.0),
+                    child: Text(AppLocalizations.of(context)!.no_internet),
+                  ),
+                ],
+              ),
+            );
+          }
+
           final ISODurationConverter converter = ISODurationConverter();
 
           switch (snapshot.connectionState) {
@@ -236,7 +263,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                               onPressed: () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (context) => MarketplacePage(userData, Status.PUBLISHED, AppLocalizations.of(context)!.public_video),
+                                    builder: (context) => MarketplacePage(Status.PUBLISHED, AppLocalizations.of(context)!.public_video),
                                   ),
                                 ).then((value) {
                                   _loadRemoteData();

@@ -64,6 +64,7 @@ dependencies:
   iso8601_duration: ^0.0.4
   firebase_analytics: ^10.8.0
   firebase_remote_config: ^4.3.8
+  connectivity_plus: ^5.0.2
 
 dev_dependencies:
   flutter_test:
@@ -122,6 +123,7 @@ flutter:
     - assets/thumbs.riv
     - assets/images/google_logo.png
     - assets/images/speck_out.png
+    - assets/images/no_internet.png
     - assets/sounds/speech_to_text_listening.m4r
     - assets/sounds/speech_to_text_cancel.m4r
     - assets/sounds/speech_to_text_stop.m4r

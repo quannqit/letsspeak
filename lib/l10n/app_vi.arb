@@ -44,5 +44,6 @@
   "edit_transcript": "Chỉnh phụ đề",
   "youtube": "https://www.youtube.com/watch?v={videoId}",
   "editing_transcript": "Phụ đề đang được biên tập.",
-  "done": "Hoàn Thành"
+  "done": "Hoàn Thành",
+  "no_internet": "Không thể kết nối tới máy chủ, kiểm tra kết nối mạng!"
 }

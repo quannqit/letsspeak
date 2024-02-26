@@ -34,7 +34,7 @@ final Map<String, String> statuses = HashMap()
 class YoutubePlayerPage extends StatefulWidget {
   final int userVideoId;
   final String youtubeVideoId;
-  final UserDataResponse userData;
+  final UserDataResponse? userData;
 
   const YoutubePlayerPage({
     Key? key,
@@ -119,7 +119,7 @@ class _YoutubePlayerPageState extends State<YoutubePlayerPage> {
       }
 
       final videoId = userVideo.videoId;
-      String lang = widget.userData.firstLanguage ?? 'vi';
+      String lang = widget.userData?.firstLanguage ?? 'vi';
       final response = await homeController.getTranslatedTranscriptsApi(videoId, lang);
       setState(() {
         translatedTranscripts.clear();
@@ -505,7 +505,7 @@ class _YoutubePlayerPageState extends State<YoutubePlayerPage> {
             PopupMenuButton(itemBuilder: (context) {
               List<PopupMenuItem> menus = [];
 
-              if (widget.userData.isAdmin) {
+              if (widget.userData?.isAdmin ?? false) {
                 menus.add(PopupMenuItem<String>(
                   value: "edit_transcript",
                   child: Row(
@@ -557,7 +557,7 @@ class _YoutubePlayerPageState extends State<YoutubePlayerPage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Visibility(
-                  visible: widget.userData.isAdmin,
+                  visible: widget.userData?.isAdmin ?? false,
                   child: DropdownButton<String>(
                     value: userVideoLoaded ? userVideo.video.visibility : 'Private',
                     items: statuses

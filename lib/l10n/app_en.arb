@@ -76,5 +76,6 @@
     }
   },
   "editing_transcript": "Transcript is being edited.",
-  "done": "Done"
+  "done": "Done",
+  "no_internet": "Can not connect to the internet, check yor connection!"
 }

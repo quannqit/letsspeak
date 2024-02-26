@@ -2,7 +2,6 @@ import 'dart:collection';
 import 'dart:math' as math;
 
 import 'package:letsspeak/data/models/requests/video_request.dart';
-import 'package:letsspeak/data/models/responses/user_data_response.dart';
 import 'package:letsspeak/data/models/video.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -29,12 +28,10 @@ class EditTranscriptPage extends StatefulWidget {
 
   final String youtubeVideoId;
   final int videoId;
-  final UserDataResponse userData;
 
   const EditTranscriptPage({
     Key? key,
     required this.youtubeVideoId,
-    required this.userData,
     required this.videoId,
   }) : super(key: key);
 

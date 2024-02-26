@@ -13,11 +13,10 @@ import '../home/controller.dart';
 
 class MarketplacePage extends StatefulWidget {
 
-  final UserDataResponse userData;
   final Status status;
   final String title;
 
-  const MarketplacePage(this.userData, this.status, this.title, {super.key});
+  const MarketplacePage(this.status, this.title, {super.key});
 
   @override
   State<StatefulWidget> createState() => _MarketplacePageState();
@@ -157,7 +156,6 @@ class _MarketplacePageState extends State<MarketplacePage> {
                                   MaterialPageRoute(
                                     builder: (context) =>
                                         EditTranscriptPage(
-                                          userData: widget.userData,
                                           youtubeVideoId: video.videoId,
                                           videoId: video.id,
                                         ),
