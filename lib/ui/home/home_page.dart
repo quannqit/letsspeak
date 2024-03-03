@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Future<void>? _initRemoteData;
   late StreamSubscription<ConnectivityResult> _conSubscription;
   bool loading = false;
-  bool internet = false;
+  bool internet = true;
 
   @override
   void initState() {
@@ -97,25 +97,31 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   Future<void> _loadRemoteData() async {
-    setState(() {
-      listUserVideo.clear();
-      loading = true;
-    });
+    if (!loading) {
+      setState(() {
+        loading = true;
+      });
 
-    userData = await homeController.getUserDataApi();
+      try {
+        userData = await homeController.getUserDataApi();
 
-    if (userData != null && userData?.firstLanguage == null) {
-      showChooseFirstLanguage();
+        if (userData != null && userData?.firstLanguage == null) {
+          showChooseFirstLanguage();
+        }
+
+        curPage = 1;
+        final UserVideoResponse res = await homeController.getMyVideosApi(curPage);
+
+        pageCount = res.pageCount;
+
+        listUserVideo.clear();
+        listUserVideo.addAll(res.data);
+      } finally {
+        setState(() {
+          loading = false;
+        });
+      }
     }
-
-    curPage = 1;
-    final UserVideoResponse res = await homeController.getMyVideosApi(curPage);
-    pageCount = res.pageCount;
-
-    setState(() {
-      listUserVideo.addAll(res.data);
-      loading = false;
-    });
   }
 
   void _scrollListener() {
@@ -127,16 +133,21 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   _loadMore() async {
-    setState(() {
-      loading = true;
-    });
-    curPage = curPage + 1;
-    final res = await homeController.getMyVideosApi(curPage);
-    listUserVideo.addAll(res.data);
+    if (!loading) {
+      setState(() {
+        loading = true;
+      });
 
-    setState(() {
-      loading = false;
-    });
+      try {
+        curPage = curPage + 1;
+        final res = await homeController.getMyVideosApi(curPage);
+        listUserVideo.addAll(res.data);
+      } finally {
+        setState(() {
+          loading = false;
+        });
+      }
+    }
   }
 
   @override
