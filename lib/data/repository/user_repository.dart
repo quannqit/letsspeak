@@ -19,4 +19,8 @@ class UserRepository {
     await userApi.setLanguage(lang);
   }
 
+  Future<void> deleteAccount() async {
+    await userApi.delete();
+  }
+
 }

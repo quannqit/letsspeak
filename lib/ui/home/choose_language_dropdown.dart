@@ -19,9 +19,11 @@ final Map<String, String> languages = HashMap()
 
 class ChooseLanguageDropdown extends StatefulWidget {
   final void Function(String lang) onSelect;
+  final String? dropdownValue;
 
   const ChooseLanguageDropdown({
     required this.onSelect,
+    this.dropdownValue,
     Key? key,
   }) : super(key: key);
 
@@ -31,6 +33,12 @@ class ChooseLanguageDropdown extends StatefulWidget {
 
 class _ChooseLanguageDropdownState extends State<ChooseLanguageDropdown> {
   String? dropdownValue;
+
+  @override
+  void initState() {
+    dropdownValue = widget.dropdownValue;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

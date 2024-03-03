@@ -8,6 +8,7 @@ import 'package:letsspeak/data/models/responses/user_data_response.dart';
 import 'package:letsspeak/data/models/user_video.dart';
 import 'package:letsspeak/data/models/responses/user_video_response.dart';
 import 'package:letsspeak/di/service_locator.dart';
+import 'package:letsspeak/ui/settings/settings_page.dart';
 import 'package:letsspeak/ui/home/controller.dart';
 import 'package:letsspeak/ui/home/widgets/app_bar.dart';
 import 'package:letsspeak/ui/marketplace/marketplace_page.dart';
@@ -24,7 +25,6 @@ import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import '../../data/repository/video_repository.dart';
 import '../add_video/add_video_page.dart';
 import 'choose_language_dropdown.dart';
-import '../login/login_page.dart';
 import '../story/youtube_player_page.dart';
 import 'expandable_fab.dart';
 
@@ -192,17 +192,16 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.logout),
-              title: Text(AppLocalizations.of(context)!.logout),
+              leading: const Icon(Icons.settings),
+              title: Text(AppLocalizations.of(context)!.settings),
               onTap: () {
-                FirebaseAuth.instance.signOut().then((value) {
-                  _googleSignIn.signOut();
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) => const LoginPage(),
-                    ),
-                  );
+                Navigator.pop(context);
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const SettingsPage(),
+                  ),
+                ).then((value) {
+                  _loadRemoteData();
                 });
               },
             ),
@@ -377,14 +376,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           child: AlertDialog(
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(
-                Radius.circular(
-                  20.0,
-                ),
+                Radius.circular(20.0),
               ),
             ),
-            contentPadding: const EdgeInsets.only(
-              top: 10.0,
-            ),
+            contentPadding: const EdgeInsets.only(top: 10.0),
             title: Text(
               AppLocalizations.of(context)!.choose_first_language,
               style: const TextStyle(fontSize: 24.0),
