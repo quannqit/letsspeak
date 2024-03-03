@@ -44,4 +44,13 @@ class Validator {
 
     return null;
   }
+
+  static String? validateConfirmDeleteAccount({required BuildContext context, required String email, required String message}) {
+
+    if (message.trim().compareTo(email) != 0) {
+      return AppLocalizations.of(context)!.validator_email_incorrect;
+    }
+
+    return null;
+  }
 }

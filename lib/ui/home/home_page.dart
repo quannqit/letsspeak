@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:letsspeak/data/models/requests/video_request.dart';
 import 'package:letsspeak/data/models/responses/user_data_response.dart';
 import 'package:letsspeak/data/models/user_video.dart';
 import 'package:letsspeak/data/models/responses/user_video_response.dart';
 import 'package:letsspeak/di/service_locator.dart';
+import 'package:letsspeak/ui/settings/settings_page.dart';
 import 'package:letsspeak/ui/home/controller.dart';
 import 'package:letsspeak/ui/home/widgets/app_bar.dart';
 import 'package:letsspeak/ui/marketplace/marketplace_page.dart';
@@ -23,7 +24,6 @@ import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import '../../data/repository/video_repository.dart';
 import '../add_video/add_video_page.dart';
 import 'choose_language_dropdown.dart';
-import '../login/login_page.dart';
 import '../story/youtube_player_page.dart';
 import 'expandable_fab.dart';
 
@@ -38,26 +38,40 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   final homeController              = getIt<HomeController>();
   final videoRepository             = getIt.get<VideoRepository>();
-  final GoogleSignIn _googleSignIn  = getIt<GoogleSignIn>();
   final _refreshIndicatorKey        = GlobalKey<RefreshIndicatorState>();
 
   late ScrollController scrollController;
-  late UserDataResponse userData;
   late StreamSubscription _intentSub;
 
+  UserDataResponse? userData;
   List<UserVideo> listUserVideo = [];
   int curPage = 1;
   int limit = 10;
   int pageCount = 0;
 
   Future<void>? _initRemoteData;
+  late StreamSubscription<ConnectivityResult> _conSubscription;
   bool loading = false;
+  bool internet = true;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     scrollController = ScrollController()..addListener(_scrollListener);
+
+    Connectivity().checkConnectivity().then((value) {
+      internet = (value != ConnectivityResult.none);
+    });
+    _conSubscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult connectivityResult) {
+      setState(() {
+        internet = (connectivityResult != ConnectivityResult.none);
+        if (internet) {
+          _loadRemoteData();
+        }
+      });
+    });
+
     _initRemoteData = _loadRemoteData();
 
     // Listen to media sharing coming from outside the app while the app is in the memory.
@@ -69,6 +83,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   @override
   void dispose() {
+    _conSubscription.cancel();
     _intentSub.cancel();
     scrollController.removeListener(_scrollListener);
     super.dispose();
@@ -82,25 +97,31 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   Future<void> _loadRemoteData() async {
-    setState(() {
-      listUserVideo.clear();
-      loading = true;
-    });
+    if (!loading) {
+      setState(() {
+        loading = true;
+      });
 
-    userData = await homeController.getUserDataApi();
+      try {
+        userData = await homeController.getUserDataApi();
 
-    if (userData.firstLanguage == null) {
-      showChooseFirstLanguage();
+        if (userData != null && userData?.firstLanguage == null) {
+          showChooseFirstLanguage();
+        }
+
+        curPage = 1;
+        final UserVideoResponse res = await homeController.getMyVideosApi(curPage);
+
+        pageCount = res.pageCount;
+
+        listUserVideo.clear();
+        listUserVideo.addAll(res.data);
+      } finally {
+        setState(() {
+          loading = false;
+        });
+      }
     }
-
-    curPage = 1;
-    final UserVideoResponse res = await homeController.getMyVideosApi(curPage);
-    pageCount = res.pageCount;
-
-    setState(() {
-      listUserVideo.addAll(res.data);
-      loading = false;
-    });
   }
 
   void _scrollListener() {
@@ -112,16 +133,21 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   _loadMore() async {
-    setState(() {
-      loading = true;
-    });
-    curPage = curPage + 1;
-    final res = await homeController.getMyVideosApi(curPage);
-    listUserVideo.addAll(res.data);
+    if (!loading) {
+      setState(() {
+        loading = true;
+      });
 
-    setState(() {
-      loading = false;
-    });
+      try {
+        curPage = curPage + 1;
+        final res = await homeController.getMyVideosApi(curPage);
+        listUserVideo.addAll(res.data);
+      } finally {
+        setState(() {
+          loading = false;
+        });
+      }
+    }
   }
 
   @override
@@ -166,7 +192,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 Navigator.pop(context);
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => MarketplacePage(userData, Status.PUBLISHED, AppLocalizations.of(context)!.public_video),
+                    builder: (context) => MarketplacePage(Status.PUBLISHED, AppLocalizations.of(context)!.public_video),
                   ),
                 ).then((value) {
                   _loadRemoteData();
@@ -181,26 +207,23 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.logout),
-              title: Text(AppLocalizations.of(context)!.logout),
+              leading: const Icon(Icons.settings),
+              title: Text(AppLocalizations.of(context)!.settings),
               onTap: () {
-                FirebaseAuth.instance.signOut().then((value) {
-                  _googleSignIn.signOut();
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) => const LoginPage(),
-                    ),
-                  );
-                });
+                Navigator.pop(context);
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const SettingsPage(),
+                  ),
+                );
               },
             ),
             AboutListTile(
               icon: const Icon(Icons.info),
               applicationIcon: const Icon(Icons.local_play),
               applicationName: AppLocalizations.of(context)!.app_name,
-              applicationVersion: '0.0.1',
-              applicationLegalese: '© 2023 QuanNQ.Dev',
+              applicationVersion: '1.0.0',
+              applicationLegalese: '© 2024 QuanNQ.Dev',
               aboutBoxChildren: [],
               child: Text(
                 AppLocalizations.of(context)!.about,
@@ -212,6 +235,22 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       body: FutureBuilder<void>(
         future: _initRemoteData,
         builder: (context, snapshot) {
+
+          if (!internet) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Image.asset('assets/images/no_internet.png', width: 100),
+                  Padding(
+                    padding: const EdgeInsets.only( top: 30.0, left: 30.0, right: 30.0),
+                    child: Text(AppLocalizations.of(context)!.no_internet),
+                  ),
+                ],
+              ),
+            );
+          }
 
           final ISODurationConverter converter = ISODurationConverter();
 
@@ -236,7 +275,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                               onPressed: () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (context) => MarketplacePage(userData, Status.PUBLISHED, AppLocalizations.of(context)!.public_video),
+                                    builder: (context) => MarketplacePage(Status.PUBLISHED, AppLocalizations.of(context)!.public_video),
                                   ),
                                 ).then((value) {
                                   _loadRemoteData();
@@ -350,14 +389,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           child: AlertDialog(
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(
-                Radius.circular(
-                  20.0,
-                ),
+                Radius.circular(20.0),
               ),
             ),
-            contentPadding: const EdgeInsets.only(
-              top: 10.0,
-            ),
+            contentPadding: const EdgeInsets.only(top: 10.0),
             title: Text(
               AppLocalizations.of(context)!.choose_first_language,
               style: const TextStyle(fontSize: 24.0),

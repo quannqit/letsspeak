@@ -11,4 +11,8 @@ class AuthApi {
     return await dioClient.get('${Endpoints.auth}/me');
   }
 
+  Future<void> delete() async {
+    await dioClient.delete(Endpoints.auth);
+  }
+
 }

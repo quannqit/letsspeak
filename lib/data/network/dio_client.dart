@@ -130,7 +130,7 @@ class DioClient {
   }
 
   // Delete:--------------------------------------------------------------------
-  Future<dynamic> delete(
+  Future<void> delete(
     String uri, {
     data,
     Map<String, dynamic>? queryParameters,
@@ -140,14 +140,13 @@ class DioClient {
     ProgressCallback? onReceiveProgress,
   }) async {
     try {
-      final Response response = await _dio.delete(
+      await _dio.delete(
         uri,
         data: data,
         queryParameters: queryParameters,
         options: options,
         cancelToken: cancelToken,
       );
-      return response.data;
     } catch (e) {
       rethrow;
     }

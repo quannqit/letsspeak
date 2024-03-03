@@ -21,11 +21,13 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
   bool _isSigningIn = false;
   final GoogleSignIn _googleSignIn = getIt<GoogleSignIn>();
 
+  StreamSubscription<GoogleSignInAccount?>? streamSubscription;
+
   @override
   void initState() {
     super.initState();
 
-    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) async {
+    streamSubscription = _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) async {
 
       if (account != null) {
         final GoogleSignInAuthentication googleAuth = await account.authentication;
@@ -48,6 +50,12 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
     // and the Google Sign In button together to "reduce friction and improve
     // sign-in rates" ([docs](https://developers.google.com/identity/gsi/web/guides/display-button#html)).
     _googleSignIn.signInSilently();
+  }
+
+  @override
+  void dispose() {
+    streamSubscription?.cancel();
+    super.dispose();
   }
 
   @override

@@ -3,6 +3,12 @@
   "app_name": "Let's Speak",
   "public_video": "Community",
   "your_videos": "My videos",
+  "settings": "Settings",
+  "general": "General",
+  "language": "Language",
+  "account": "Account",
+  "email_subscription": "Email Subscription",
+  "confirm_account_deletion": "Confirm Account Deletion",
   "logout": "Logout",
   "about": "About Let's Speak",
   "login": "Login",
@@ -17,6 +23,7 @@
   "validator_password_empty": "Password can't be empty",
   "validator_password_length": "Enter a password with length at least 6 characters",
   "validator_name_empty": "Name can't be empty",
+  "validator_email_incorrect": "Input email is incorrect",
   "reset_password_sent": "Reset password link has been sent. Please check your mail box!",
   "unknown_error": "Unknown error!",
   "error_login_failed": "Email or password is not correct, please check again.",
@@ -57,6 +64,9 @@
   "choose_first_language": "Please choose your first language:",
   "note": "Note",
   "submit": "Send",
+  "delete": "Delete",
+  "delete_account": "Delete account",
+  "confirm_delete_account": "PERMANENTLY DELETE",
   "choose_first_language_desc": "Transcript will be translated into your first language.",
   "practice_everywhere": "Practice English 24/7 from everywhere",
   "switch_lang_message": "To help Bobby can understand your speak in English, please change phone language to English.",
@@ -76,5 +86,18 @@
     }
   },
   "editing_transcript": "Transcript is being edited.",
-  "done": "Done"
+  "done": "Done",
+  "no_internet": "Can not connect to the internet, check yor connection!",
+  "delete_account_line1": "Are you sure you want to delete your account? Please read how account deletion will affect.",
+  "delete_account_line2": "Deleting your account removes personal information from our database. Your email becomes permanently reserved and same email cannot be re-used to register a new account.",
+  "delete_account_line3": "Deleting your account will unsubscribe you from all mailing lists.",
+  "delete_account_line4": "Enter {email} to confirm:",
+  "@delete_account_line4": {
+    "description": "Email",
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  }
 }
