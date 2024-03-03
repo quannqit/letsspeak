@@ -62,10 +62,10 @@ class _SettingsPageState extends State<SettingsPage> with WidgetsBindingObserver
                     child: ListView(
                       children: [
                         _SingleSection(
-                          title: "General",
+                          title: AppLocalizations.of(context)!.settings,
                           children: [
                             _CustomListTile(
-                              title: "Language",
+                              title: AppLocalizations.of(context)!.language,
                               icon: Icons.language,
                               trailing: Text(languages[firstLanguage] ?? ''),
                               onTap: () {
@@ -73,16 +73,15 @@ class _SettingsPageState extends State<SettingsPage> with WidgetsBindingObserver
                               },
                             ),
                             _CustomListTile(
-                              title: "Logout",
+                              title: AppLocalizations.of(context)!.logout,
                               icon: Icons.logout,
-                              onTap: () {
+                              onTap: () async {
+                                await _googleSignIn.signOut();
                                 FirebaseAuth.instance.signOut().then((value) {
-                                  _googleSignIn.signOut();
-                                  Navigator.of(context).pop();
-                                  Navigator.of(context).pushReplacement(
+                                  Navigator.of(context).pushAndRemoveUntil(
                                     MaterialPageRoute(
                                       builder: (context) => const LoginPage(),
-                                    ),
+                                    ), (route) => false
                                   );
                                 });
                               },
@@ -90,10 +89,10 @@ class _SettingsPageState extends State<SettingsPage> with WidgetsBindingObserver
                           ],
                         ),
                         _SingleSection(
-                          title: "Account",
+                          title: AppLocalizations.of(context)!.account,
                           children: [
                             _CustomListTile(
-                              title: "Delete account",
+                              title: AppLocalizations.of(context)!.delete_account,
                               icon: Icons.delete,
                               trailing: const Icon(CupertinoIcons.forward, size: 18),
                               onTap: () {

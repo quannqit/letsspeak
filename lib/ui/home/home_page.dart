@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:letsspeak/data/models/requests/video_request.dart';
 import 'package:letsspeak/data/models/responses/user_data_response.dart';
 import 'package:letsspeak/data/models/user_video.dart';
@@ -39,7 +38,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   final homeController              = getIt<HomeController>();
   final videoRepository             = getIt.get<VideoRepository>();
-  final GoogleSignIn _googleSignIn  = getIt<GoogleSignIn>();
   final _refreshIndicatorKey        = GlobalKey<RefreshIndicatorState>();
 
   late ScrollController scrollController;
@@ -54,7 +52,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Future<void>? _initRemoteData;
   late StreamSubscription<ConnectivityResult> _conSubscription;
   bool loading = false;
-  bool noInternet = false;
+  bool internet = false;
 
   @override
   void initState() {
@@ -62,9 +60,15 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     scrollController = ScrollController()..addListener(_scrollListener);
 
+    Connectivity().checkConnectivity().then((value) {
+      internet = (value != ConnectivityResult.none);
+    });
     _conSubscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult connectivityResult) {
       setState(() {
-        noInternet = connectivityResult == ConnectivityResult.none;
+        internet = (connectivityResult != ConnectivityResult.none);
+        if (internet) {
+          _loadRemoteData();
+        }
       });
     });
 
@@ -200,17 +204,15 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   MaterialPageRoute(
                     builder: (context) => const SettingsPage(),
                   ),
-                ).then((value) {
-                  _loadRemoteData();
-                });
+                );
               },
             ),
             AboutListTile(
               icon: const Icon(Icons.info),
               applicationIcon: const Icon(Icons.local_play),
               applicationName: AppLocalizations.of(context)!.app_name,
-              applicationVersion: '0.0.1',
-              applicationLegalese: '© 2023 QuanNQ.Dev',
+              applicationVersion: '1.0.0',
+              applicationLegalese: '© 2024 QuanNQ.Dev',
               aboutBoxChildren: [],
               child: Text(
                 AppLocalizations.of(context)!.about,
@@ -223,7 +225,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         future: _initRemoteData,
         builder: (context, snapshot) {
 
-          if (noInternet) {
+          if (!internet) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -231,7 +233,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 children: [
                   Image.asset('assets/images/no_internet.png', width: 100),
                   Padding(
-                    padding: const EdgeInsets.only( top: 30.0),
+                    padding: const EdgeInsets.only( top: 30.0, left: 30.0, right: 30.0),
                     child: Text(AppLocalizations.of(context)!.no_internet),
                   ),
                 ],

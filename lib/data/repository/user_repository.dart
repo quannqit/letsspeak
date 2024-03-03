@@ -18,9 +18,4 @@ class UserRepository {
   Future<void> setLanguage(String lang) async {
     await userApi.setLanguage(lang);
   }
-
-  Future<void> deleteAccount() async {
-    await userApi.delete();
-  }
-
 }

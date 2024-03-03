@@ -4,6 +4,11 @@
   "public_video": "Community",
   "your_videos": "My videos",
   "settings": "Settings",
+  "general": "General",
+  "language": "Language",
+  "account": "Account",
+  "email_subscription": "Email Subscription",
+  "confirm_account_deletion": "Confirm Account Deletion",
   "logout": "Logout",
   "about": "About Let's Speak",
   "login": "Login",
@@ -82,5 +87,17 @@
   },
   "editing_transcript": "Transcript is being edited.",
   "done": "Done",
-  "no_internet": "Can not connect to the internet, check yor connection!"
+  "no_internet": "Can not connect to the internet, check yor connection!",
+  "delete_account_line1": "Are you sure you want to delete your account? Please read how account deletion will affect.",
+  "delete_account_line2": "Deleting your account removes personal information from our database. Your email becomes permanently reserved and same email cannot be re-used to register a new account.",
+  "delete_account_line3": "Deleting your account will unsubscribe you from all mailing lists.",
+  "delete_account_line4": "Enter {email} to confirm:",
+  "@delete_account_line4": {
+    "description": "Email",
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  }
 }

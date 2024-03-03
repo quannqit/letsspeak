@@ -25,8 +25,4 @@ class UserApi {
     );
   }
 
-  Future<Response> delete() async {
-    return await dioClient.delete(Endpoints.users);
-  }
-
 }

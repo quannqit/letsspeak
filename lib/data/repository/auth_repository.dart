@@ -10,4 +10,9 @@ class AuthRepository {
     return UserDataResponse.fromJson(response.data);
   }
 
+  Future<void> deleteAccount() async {
+    await authApi.delete();
+  }
+
+
 }

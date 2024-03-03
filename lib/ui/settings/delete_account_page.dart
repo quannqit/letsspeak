@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:letsspeak/data/repository/auth_repository.dart';
 import 'package:letsspeak/di/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../data/models/responses/user_data_response.dart';
-import '../../data/repository/user_repository.dart';
 import '../../validator.dart';
 import '../login/login_page.dart';
 
@@ -24,7 +24,7 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
   final _confirmFocusNode = FocusNode();
   bool _isProcessing = false;
 
-  final userRepository = getIt.get<UserRepository>();
+  final authRepository = getIt.get<AuthRepository>();
   final GoogleSignIn _googleSignIn = getIt<GoogleSignIn>();
 
   @override
@@ -50,49 +50,49 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
               Padding(
                 padding: const EdgeInsets.only(top: 24.0),
                 child: Text(
-                  "Are you sure you want to delete your account? Please read how account deletion will affect.",
+                  AppLocalizations.of(context)!.delete_account_line1,
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 12.0),
                 child: Text(
-                  "Account",
+                  AppLocalizations.of(context)!.account,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 4.0),
                 child: Text(
-                  "Deleting your account removes personal information from our database. Your email becomes permanently reserved and same email cannot be re-used to register a new account.",
+                  AppLocalizations.of(context)!.delete_account_line2,
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 12.0),
                 child: Text(
-                  "Email Subscription",
+                  AppLocalizations.of(context)!.email_subscription,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 4.0),
                 child: Text(
-                  "Deleting your account will unsubscribe you from all mailing lists.",
+                  AppLocalizations.of(context)!.delete_account_line3,
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 12.0),
                 child: Text(
-                  "Confirm Account Deletion",
+                  AppLocalizations.of(context)!.confirm_account_deletion,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 4.0),
                 child: Text(
-                  "Enter ${widget.userData.email} to confirm:",
+                  AppLocalizations.of(context)!.delete_account_line4(widget.userData.email),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
@@ -160,15 +160,15 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
         _isProcessing = true;
       });
 
-      userRepository.deleteAccount().then((value) {
-        FirebaseAuth.instance.signOut().then((value) {
-          _googleSignIn.signOut();
-          Navigator.of(context).pop();
-          Navigator.of(context).pushReplacement(
+      authRepository.deleteAccount().then((value) async {
+        await _googleSignIn.signOut();
+        FirebaseAuth.instance.signOut().then((value)  {
+          Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
               builder: (context) => const LoginPage(),
-            ),
-          );
+            ), (route) {
+            return false;
+          });
         });
       });
     }

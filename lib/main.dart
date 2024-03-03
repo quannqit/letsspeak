@@ -69,10 +69,10 @@ class _MyApp extends State<MyApp> {
     }
 
     if (snapshot.connectionState == ConnectionState.done) {
-      if (snapshot.data == null) {
-        return const LoginPage();
-      } else {
+      if (FirebaseAuth.instance.currentUser != null && snapshot.data != null) {
         return const HomePage();
+      } else {
+        return const LoginPage();
       }
     }
 

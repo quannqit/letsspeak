@@ -4,6 +4,11 @@
   "public_video": "Cộng đồng",
   "your_videos": "Video của tôi",
   "settings": "Cài đặt",
+  "general": "Chung",
+  "language": "Ngôn ngữ",
+  "account": "Tài khoản",
+  "email_subscription": "Bản tin",
+  "confirm_account_deletion": "Xác nhận xoá tài khoản",
   "logout": "Đăng xuất",
   "about": "Về Let's Speak",
   "login": "Đăng nhập",
@@ -49,5 +54,9 @@
   "youtube": "https://www.youtube.com/watch?v={videoId}",
   "editing_transcript": "Phụ đề đang được biên tập.",
   "done": "Hoàn Thành",
-  "no_internet": "Không thể kết nối tới máy chủ, kiểm tra kết nối mạng!"
+  "no_internet": "Không thể kết nối tới máy chủ,\nvui lòng kiểm tra kết nối mạng!",
+  "delete_account_line1": "Bạn có chắc chắn muốn xoá tài khoản? Vui lòng cân nhắc ảnh hưởng của việc xoá tài khoản.",
+  "delete_account_line2": "Xoá tài khoản sẽ xoá vĩnh việc thông tin cá nhân của bạn khỏi cơ sở dữ liệu của chúng tôi và không thể khôi phục lại.",
+  "delete_account_line3": "Xoá tài khoản sẽ huỷ đăng ký email của bạn khỏi tất cả các bản tin của chúng tôi.",
+  "delete_account_line4": "Nhập {email} để xác nhận:"
 }
